@@ -1,18 +1,18 @@
-import openai
 import streamlit as st
+from langchain.llms import OpenAI
+st.set_page_config(page_title="🦜🔗 Quickstart App")
+st.title('🦜🔗 Quickstart App')
 
-st.title("ChatGPT-like clone")
+openai_api_key = st.sidebar.text_input('OpenAI API Key')
 
-openai.api_key = st.sidebar.text_input("API-KEY", type="password") #st.secrets["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"]
+def generate_response(input_text):
+  llm = OpenAI(temperature=0.7, openai_api_key=openai_api_key)
+  st.info(llm(input_text))
 
-prompt = "Please generate a blog outline on how a beginner can break into the field of data science."
-
-completion = openai.ChatCompletion.create(
-  model="gpt-3.5-turbo",
-  messages=[
-    {"role": "system", "content": "You are a helpful assistant with extensive experience in data science and technical writing."},
-    {"role": "user", "content": prompt}
-  ]
-)
-
-st.text(completion.choices[0].message)
+with st.form('my_form'):
+  text = st.text_area('Enter text:', 'What are the three key pieces of advice for learning how to code?')
+  submitted = st.form_submit_button('Submit')
+  if not openai_api_key.startswith('sk-'):
+    st.warning('Please enter your OpenAI API key!', icon='⚠')
+  if submitted and openai_api_key.startswith('sk-'):
+    generate_response(text)
