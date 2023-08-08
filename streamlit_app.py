@@ -1,5 +1,5 @@
-import streamlit as st
 import openai
+import streamlit as st
 
 st.title("ChatGPT-like clone")
 
@@ -15,4 +15,4 @@ completion = openai.ChatCompletion.create(
   ]
 )
 
-print(completion.choices[0].message)
+st.text(completion.choices[0].message)
